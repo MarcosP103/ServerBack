@@ -6,7 +6,6 @@ class ProductManager {
     this.products = [];
   }
 
-  //load
   async uploadProducts() {
     try {
       const data = await fs.readFile(this.productsFile, "utf8");
@@ -47,7 +46,7 @@ class ProductManager {
     this.addFile();
     console.log("Producto agregado correctamente");
   }
-  //consult
+  
   async getProducts() {
     try {
       await this.uploadProducts();
@@ -66,7 +65,6 @@ class ProductManager {
     return product;
   }
 
-  //mod
   async modProduct(id, productMod) {
     const indexProd = this.products.findIndex((product) => product.id === id);
     if (indexProd === -1) {
@@ -76,7 +74,7 @@ class ProductManager {
     try {
       this.products[indexProd] = { ...this.products[indexProd], ...productMod };
       await this.addFile();
-      console.log("Se ha agregado correctamente");
+      console.log("Se ha modificado correctamente");
     } catch (error) {
       console.log("Hubo un problema al actualizar", error);
     }
@@ -94,6 +92,7 @@ class ProductManager {
       );
     } catch (error) {
       console.log("Error", error);
+      throw error
     }
   }
 
@@ -116,15 +115,3 @@ class ProductManager {
 module.exports = ProductManager
 
 const productManager = new ProductManager("./DB.json");
-
-productManager.addProduct("Remera", "100% algodon", 100, "remera.jpg", 1, 100);
-
-const allProducts = productManager.getProducts();
-console.log("Todos los productos: ", allProducts);
-
-const productById = productManager.getProductsById(1);
-console.log("el producto con ese Id: ", productById);
-
-productManager.modProduct(1, { price: 120 });
-
-productManager.addFile();

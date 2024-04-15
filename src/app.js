@@ -1,14 +1,14 @@
-const ProductManager = require("./managerProducts.js");
-
 const express = require("express");
+const ProductManager = require("../managerProducts.js");
+
 const app = express();
 
-const manager = new ProductManager("./src/DB.json");
+const PORT = 8080;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-const PORT = 8080;
+const manager = new ProductManager("./src/DB.json");
 
 app.get("/products", async (req, res) => {
   try {
@@ -28,9 +28,9 @@ app.get("/products", async (req, res) => {
   }
 });
 
-app.get("/products/:id", async (req, res) => {
+app.get("/products/:pid", async (req, res) => {
   try {
-    let id = parseInt(req.params.id);
+    let id = parseInt(req.params.pid);
     if (isNaN(id)) {
       return res.status(400).send("El Id del producto no es válido");
     }
