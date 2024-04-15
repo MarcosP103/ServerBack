@@ -1,14 +1,13 @@
 const express = require("express");
-const ProductManager = require("../managerProducts.js");
+const ProductManager = require("./managerProducts.js");
 
 const app = express();
-
 const PORT = 8080;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-const manager = new ProductManager("./src/DB.json");
+const productmanager = new ProductManager();
 
 app.get("/products", async (req, res) => {
   try {
