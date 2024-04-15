@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "title": "Remera",
+    "description": "100% algodon",
+    "price": 120,
+    "thumbnail": "remera.jpg",
+    "code": 1,
+    "stock": 100
+  }
+]

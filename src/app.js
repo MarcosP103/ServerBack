@@ -1,116 +1,53 @@
-const fs = require("fs").promises;
+const ProductManager = require("./managerProducts.js");
 
-class ProductManager {
-  constructor(path) {
-    this.productsFile = path;
-    this.products = [];
+const express = require("express");
+const app = express();
+
+const manager = new ProductManager("./src/DB.json");
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+const PORT = 8080;
+
+app.get("/products", async (req, res) => {
+  try {
+    const arrayProducts = await manager.uploadProducts();
+    let quantity = parseInt(req.query.quantity);
+    if (!isNaN(quantity) && quantity > 0) {
+      const arrayQuantity = arrayProducts.slice(0, quantity);
+      return res.send(arrayQuantity);
+    } else if (!isNaN(quantity) && quantity <= 0) {
+      return res.status(400).send("La cantidad debe ser mayor a 0");
+    } else {
+      return res.send(arrayProducts);
+    }
+  } catch (error) {
+    console.log("Ha habido un error", error);
+    return res.status(500).send("Error en la solicitud");
   }
+});
 
-  //load
-  async uploadProducts() {
-    try {
-      const data = await fs.readFile(this.productsFile, "utf8");
-      this.products = JSON.parse(data);
-    } catch (error) {
-      if (error.code === "ENOENT") {
-        this.products = [];
-      } else {
-        throw error;
-      }
+app.get("/products/:id", async (req, res) => {
+  try {
+    let id = parseInt(req.params.id);
+    if (isNaN(id)) {
+      return res.status(400).send("El Id del producto no es válido");
     }
+    const filter = await manager.getProductById(id);
+    if (filter) {
+      return res.send(filter);
+    } else {
+      console.log("Producto no encontrado");
+      return res.status(404).send("Producto no encontrado");
+    }
+  } catch (error) {
+    console.log("Error al procesar la solicitud", error);
+    return res.status(500).send("Error en la solicitud");
   }
+});
 
-  async addProduct(title, description, price, thumbnail, code, stock) {
-    if (!title && !description && !price && !thumbnail && !code && !stock) {
-      console.log("Debe ingresar todos los campos");
-      return;
-    }
-    if (this.products.find((product) => product.code === code)) {
-      console.log("El producto ya existe");
-      return;
-    }
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
-    const id =
-      this.products.length > 0
-        ? Math.max(...this.products.map((p) => p.id)) + 1
-        : 1;
-    const product = {
-      id,
-      title,
-      description,
-      price,
-      thumbnail,
-      code,
-      stock,
-    };
-    this.products.push(product);
-    this.addFile();
-    console.log("Producto agregado correctamente");
-  }
-  //consult
-  async getProducts() {
-    try {
-      await this.uploadProducts();
-      return this.products;
-    } catch (error) {
-      console.log("Error al obtener los productos:", error);
-      return [];
-    }
-  }
-
-  getProductsById(id) {
-    const product = this.products.find((prod) => prod.id === id);
-    if (!product) {
-      console.log("No se encontró el producto segun el ID indicado");
-    }
-    return product;
-  }
-
-  //mod
-  async modProduct(id, productMod) {
-    const indexProd = this.products.findIndex((product) => product.id === id);
-    if (indexProd === -1) {
-      console.error("No se encontro el producto por ID");
-      return;
-    }
-    try {
-      this.products[indexProd] = { ...this.products[indexProd], ...productMod };
-      await this.addFile();
-      console.log("Se ha agregado correctamente");
-    } catch (error) {
-      console.log("Hubo un problema al actualizar", error);
-    }
-  }
-
-  async addFile() {
-    try {
-      await fs.writeFile(
-        this.productsFile,
-        JSON.stringify(this.products, null, 2)
-      );
-      console.log(
-        "Productos agregados correctamente al archivo: ",
-        this.productsFile
-      );
-    } catch (error) {
-      console.log("Error", error);
-    }
-  }
-
-  async delProduct(id) {
-    const indexProd = this.products.findIndex((product) => product.id === id);
-    if (indexProd === -1) {
-      console.error("No se encontró el producto por ID");
-      return;
-    }
-    try {
-      this.products.splice(indexProd, 1);
-      await this.addFile();
-      console.log("Producto eliminado correctamente");
-    } catch (error) {
-      console.log("Hubo un problema al eliminar", error);
-    }
-  }
-}
-
-module.exports = ProductManager
