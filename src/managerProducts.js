@@ -4,6 +4,7 @@ class ProductManager {
   constructor(path) {
     this.productsFile = path;
     this.products = [];
+    this.uploadProducts();
   }
 
   async uploadProducts() {
@@ -46,7 +47,7 @@ class ProductManager {
     this.addFile();
     console.log("Producto agregado correctamente");
   }
-  
+
   async getProducts() {
     try {
       await this.uploadProducts();
@@ -92,14 +93,14 @@ class ProductManager {
       );
     } catch (error) {
       console.log("Error", error);
-      throw error
+      throw error;
     }
   }
 
   async delProduct(id) {
     const indexProd = this.products.findIndex((product) => product.id === id);
     if (indexProd === -1) {
-      console.error("No se encontró el producto por ID");
+      console.error("No se encontró el producto por ID", id);
       return;
     }
     try {
@@ -108,10 +109,11 @@ class ProductManager {
       console.log("Producto eliminado correctamente");
     } catch (error) {
       console.log("Hubo un problema al eliminar", error);
+      throw error;
     }
   }
 }
 
-module.exports = ProductManager
+module.exports = ProductManager;
 
 const productManager = new ProductManager("./DB.json");

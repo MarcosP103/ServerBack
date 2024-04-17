@@ -7,11 +7,11 @@ const PORT = 8080;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-const productmanager = new ProductManager();
+const productManager = new ProductManager();
 
 app.get("/products", async (req, res) => {
   try {
-    const arrayProducts = await manager.uploadProducts();
+    const arrayProducts = await productManager.uploadProducts();
     let quantity = parseInt(req.query.quantity);
     if (!isNaN(quantity) && quantity > 0) {
       const arrayQuantity = arrayProducts.slice(0, quantity);
@@ -33,7 +33,7 @@ app.get("/products/:pid", async (req, res) => {
     if (isNaN(id)) {
       return res.status(400).send("El Id del producto no es válido");
     }
-    const filter = await manager.getProductById(id);
+    const filter = await productManager.getProductById(id);
     if (filter) {
       return res.send(filter);
     } else {
@@ -49,4 +49,3 @@ app.get("/products/:pid", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
