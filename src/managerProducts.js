@@ -2,14 +2,14 @@ const fs = require("fs").promises;
 
 class ProductManager {
   constructor(path) {
-    this.productsFile = path;
+    this.productsFile = "path";
     this.products = [];
     this.uploadProducts();
   }
 
   async uploadProducts() {
     try {
-      const data = await fs.readFile(this.productsFile, "utf8");
+      const data = await fs.readFile(this.productsFile, 'utf8');
       this.products = JSON.parse(data);
     } catch (error) {
       if (error.code === "ENOENT") {
@@ -115,5 +115,3 @@ class ProductManager {
 }
 
 module.exports = ProductManager;
-
-const productManager = new ProductManager("./DB.json");
