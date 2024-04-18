@@ -7,7 +7,7 @@ const PORT = 8080;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-const productManager = new ProductManager();
+const productManager = new ProductManager('/DB.json');
 
 app.get("/products", async (req, res) => {
   try {
