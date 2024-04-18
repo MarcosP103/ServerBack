@@ -7,5 +7,23 @@
     "thumbnail": "remera.jpg",
     "code": 1,
     "stock": 100
+  },
+  {
+    "id": 2,
+    "title": "Remera2",
+    "description": "100% algodon",
+    "price": 100,
+    "thumbnail": "remera2.jpg",
+    "code": 2,
+    "stock": 120
+  },
+  {
+    "id": 3,
+    "title": "Remera3",
+    "description": "100% algodon",
+    "price": 110,
+    "thumbnail": "remera3.jpg",
+    "code": 3,
+    "stock": 90
   }
 ]
