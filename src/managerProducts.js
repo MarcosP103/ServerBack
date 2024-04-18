@@ -2,7 +2,7 @@ const fs = require("fs").promises;
 
 class ProductManager {
   constructor(path) {
-    this.productsFile = "path";
+    this.productsFile = __dirname+path;
     this.products = [];
     this.uploadProducts();
   }
@@ -11,6 +11,7 @@ class ProductManager {
     try {
       const data = await fs.readFile(this.productsFile, 'utf8');
       this.products = JSON.parse(data);
+      return this.products
     } catch (error) {
       if (error.code === "ENOENT") {
         this.products = [];

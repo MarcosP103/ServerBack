@@ -33,7 +33,7 @@ app.get("/products/:pid", async (req, res) => {
     if (isNaN(id)) {
       return res.status(400).send("El Id del producto no es válido");
     }
-    const filter = await productManager.getProductById(id);
+    const filter = await productManager.getProductsById(id);
     if (filter) {
       return res.send(filter);
     } else {
