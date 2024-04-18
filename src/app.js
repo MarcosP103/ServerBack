@@ -12,11 +12,11 @@ const productManager = new ProductManager('/DB.json');
 app.get("/products", async (req, res) => {
   try {
     const arrayProducts = await productManager.uploadProducts();
-    let quantity = parseInt(req.query.quantity);
-    if (!isNaN(quantity) && quantity > 0) {
-      const arrayQuantity = arrayProducts.slice(0, quantity);
-      return res.send(arrayQuantity);
-    } else if (!isNaN(quantity) && quantity <= 0) {
+    let limit = parseInt(req.query.limit);
+    if (!isNaN(limit) && limit > 0) {
+      const arrayLimit = arrayProducts.slice(0, limit);
+      return res.send(arrayLimit);
+    } else if (!isNaN(limit) && limit <= 0) {
       return res.status(400).send("La cantidad debe ser mayor a 0");
     } else {
       return res.send(arrayProducts);
